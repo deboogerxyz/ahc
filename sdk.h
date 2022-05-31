@@ -95,12 +95,13 @@ typedef struct {
 } Engine;
 
 typedef float Matrix3x4[3][4];
+typedef Matrix3x4 BoneMatrix[128];
 
 typedef struct {
 	PAD(0x18)
 	Entity *(*getcurrententity)(void);
 	PAD(36)
-	Matrix3x4 **(*getbonetransform)(void);
+	BoneMatrix *(*getbonetransform)(void);
 } EngineStudio;
 
 typedef struct {

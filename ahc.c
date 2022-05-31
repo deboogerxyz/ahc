@@ -419,11 +419,11 @@ rendermodel(void *this)
 {
 	int i;
 	Entity *ent;
-	Matrix3x4 *mat[128];
+	BoneMatrix *mat;
 
 	ent = enginestudio->getcurrententity();
 
-	*(Matrix3x4 ***)mat = enginestudio->getbonetransform();
+	mat = enginestudio->getbonetransform();
 	for (i = 0; i < 128; i++)
 		bones[ent->i][i] = matrix3x4_origin((*mat)[i]);
 
