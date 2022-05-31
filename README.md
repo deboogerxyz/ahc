@@ -16,6 +16,7 @@ Written in ANSI C (C89).
 * Multi-directional autostrafer
 * Aimbot
 * Chams
+* No flash
 * No aim punch (commented out)
 * Thirdperson (commented out)
 
