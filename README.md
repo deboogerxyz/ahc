@@ -27,6 +27,26 @@ Written in ANSI C (C89).
 * Aimbot visible check
 * Expand the Half-Life SDK
 
+## Installing dependencies
+
+### Arch (Artix, Manjaro, etc.)
+
+```
+sudo pacman -S git make gcc lib32-gcc-libs mesa
+```
+
+### Debian (Ubuntu, etc.)
+
+```
+sudo apt install git make gcc-multilib mesa-common-dev
+```
+
+### Fedora
+
+```
+sudo dnf install glibc-devel.i686 mesa-libGL-devel.i686
+```
+
 ## Downloading
 
 ```
