@@ -1,6 +1,7 @@
 #include <dlfcn.h>
 #include <GL/gl.h>
 #include <math.h>
+#include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -13,8 +14,9 @@
 
 typedef void (*GlColor4f)(GLfloat r, GLfloat g, GLfloat b, GLfloat a);
 
-static void *hw;
+static pthread_t pthread;
 
+static void *hw;
 static Engine *engine;
 static Client *client, origclient;
 static int (*origscreenfade)(char *name, int size, void *buf);
@@ -501,10 +503,14 @@ teaminfo(char *name, int size, void *buf)
 	return origteaminfo(name, size, buf);
 }
 
-__attribute__((constructor))
-static int
-onload(void)
+static void *
+threadfn(void *argv)
 {
+	struct timespec ts = {0, 100000000}; /* 100ms */
+
+	while (!dlopen("platform/servers/serverbrowser_linux.so", RTLD_NOLOAD | RTLD_NOW))
+		nanosleep(&ts, &ts); /* Wait for the game to fully load */
+
 	getmodules();
 
 	origclient = *client;
@@ -529,6 +535,16 @@ onload(void)
 	client->is3rdperson = is3rdperson;
 	*/
 
+	return NULL;
+}
+
+__attribute__((constructor))
+static int
+onload(void)
+{
+	pthread_create(&pthread, NULL, threadfn, NULL);
+	pthread_detach(pthread);
+
 	return 0;
 }
 
@@ -536,6 +552,8 @@ __attribute__((destructor))
 static void
 onunload(void)
 {
+	pthread_join(pthread, NULL);
+
 	*(GlColor4f *)dlsym(hw, "qglColor4f") = origglcolor4f;
 	*studiomodelrenderer = origstudiomodelrenderer;
 	findusermsg("TeamInfo")->fn = origteaminfo;
