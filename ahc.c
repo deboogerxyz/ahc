@@ -87,6 +87,9 @@ bhop(UserCmd *cmd)
 	if (!isalive(localplayer))
 		return;
 
+	if (!playermove)
+		return;
+
 	if (!(playermove->flags & FL_ONGROUND) && !wasonground)
 		cmd->buttons &= ~IN_JUMP;
 
@@ -153,6 +156,9 @@ faststop(UserCmd *cmd)
 	if (cmd->buttons & IN_JUMP)
 		return;
 
+	if (!playermove)
+		return;
+
 	if (!(playermove->flags & FL_ONGROUND))
 		return;
 
@@ -200,6 +206,9 @@ autostrafer(UserCmd *cmd)
 		return;
 
 	if (!isalive(localplayer))
+		return;
+
+	if (!playermove)
 		return;
 
 	speed = vector_len2d(playermove->velocity);
@@ -319,6 +328,9 @@ aimbot(UserCmd *cmd)
 	Vector ang, bestang = {0};
 
 	if (!(cmd->buttons & IN_ATTACK))
+		return;
+
+	if (!playermove)
 		return;
 
 	engine->eventapi->localplayerviewheight(&viewheight);
